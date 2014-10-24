@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>pictureCut Example</title>
+	<meta charset="utf-8" />
+	<style type="text/css">
+		body { font-family:Arial; font-size:12pt; padding:20px; width:500px; margin:20px auto; border:solid 1px black;}
+		h1 { font-size:16pt; }
+		h2 { font-size:13pt; }
+		ul { margin:0px; padding:0px; margin-left:20px; }
+		#list1{ width:435px; list-style-type:none; height:435px }
+		#list1 li{ float:left;  } 
+		#list1 div{ width:214px; height:214px; border:solid 1px black; background-color:#E0E0E0; text-align:center; background-repeat:no-repeat;background-size:200% 200%; background-image:url('images/brf435.jpg'); }
+		.placeHolder div { background-color:white !important; border:dashed 1px gray !important; }
+	</style>
+</head>
+<body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="jquery.dragsort-0.5.2.min.js"></script>
+	<ul id="list1">
+		<li>
+			<div style=""><input type="hidden" /></div>
+		</li>
+		<li>
+			<div style=""><input type="hidden" /></div>
+		</li>
+		<li>
+			<div style=";"><input type="hidden" /></div>
+		</li>
+		<li>
+			<div style=""><input type="hidden" /></div>
+		</li>	
+	</ul>
+	<div style="clear:both;"></div>
+	<input name="list1SortOrder" type="hidden" />
+	<script type="text/javascript">
+		$("#list1").dragsort({ dragSelector: "div", dragBetween: false, dragEnd: saveOrder, placeHolderTemplate: "<li class='placeHolder'><div></div></li>" });
+		$().ready(function(){
+			var imagePath = "url\('images/brf"+Math.floor(Math.random()*4)+".jpg'\)";
+			$("#list1 div").css({"background-image": imagePath});
+			
+			var backPosition = new Array();
+			backPosition[0]="0 0";
+			backPosition[1]="100% 0";
+			backPosition[2]="0 100%";
+			backPosition[3]="100% 100%";
+			var positions = getRandomSeq();
+			for(var i=0; i<4; i++){
+				$("#list1 div:eq("+i+")").css({"background-position" : backPosition[positions[i]]});
+				console.info($("#list1 div:eq("+i+") input").val(positions[i]));
+			}
+		});
+		
+		function saveOrder() {
+			var data = $("#list1 li").map(function() { return $(this).children().children().val(); }).get();
+			$("input[name=list1SortOrder]").val(data.join("|"));
+			if(data.join("|") == '0|1|2|3'){
+			location.href="http://taoquan.taobao.com/coupon/unify_apply_result_tmall.htm?seller_id=2094298799&success=false&need_check=false&need_ok=true&activity_id=142284491&apply_source=daily&is_collina_check=true&ok_str=%B0%A2%E0%EF%BE%C6%C0%E0%D7%A8%D3%AA%B5%EA+20.00%D4%AA%B5%EA%C6%CC%D3%C5%BB%DD%84%BB";}
+		};
+		/*不重复的随机数生成,并去除正确顺序*/
+		function getRandomSeq(){
+			var imagePositions = new Array();
+			var temp = new Array();
+			
+			for(var i=0; i<4; i++){
+				temp[i]=i;
+			}
+			
+			var end = 3;
+			
+			for(var i=0; i<4; i++){
+				num = Math.floor(Math.random()*(end+1));
+				imagePositions[i] = temp[num];
+				temp[num]=temp[end];
+				end--;
+			}
+			console.info(imagePositions);
+			
+			if(imagePositions.toString()=='0,1,2,3'){
+				return getRandomSeq();
+			}else{
+				return imagePositions
+			}
+		}
+	</script>
+</body>
+</html>
